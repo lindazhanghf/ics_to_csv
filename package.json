@@ -1,0 +1,11 @@
+{
+  "name": "ics_to_csv",
+  "version": "0.1.0",
+  "description": "Parse ics format (iCal) to csv format",
+  "type": "module",
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "vdata-parser": "^0.1.5"
+  }
+}
