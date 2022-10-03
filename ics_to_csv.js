@@ -37,11 +37,11 @@ readFile(argv[2], 'utf-8')
   })
   .catch(console.error)
 
-  function CleanEscapeCharacters(line) {
-    line = line.replaceAll('\\n', '  ') // new lines shows up as \n in .ics => replace with spaces
-    line = line.replaceAll('\\', '') // simply remove any other escape characters aka backslash
-    return line
-  }
+function CleanEscapeCharacters(str) {
+  str = str.replaceAll('\\n', '  ') // new lines shows up as \n in .ics => replace with spaces
+  str = str.replaceAll('\\', '') // then remove any other escape characters aka backslashes
+  return str
+}
 
 function ParseEventByChunk(event_chunk) {
   event_chunk = CleanEscapeCharacters(event_chunk)
