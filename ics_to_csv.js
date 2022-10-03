@@ -21,24 +21,17 @@ readFile(argv[2], 'utf-8')
       if (line.startsWith('BEGIN:')) {
         console.log(event_chunk)
         if (!skip_chunk) {
-          const parsed_event = parser.fromString(event_chunk)['VEVENT']
-          if (parsed_event != null) parsed_events.push(parsed_event)
-
-          if (parsed_events.length > 10) {
-            parsed_events.forEach(event => console.log(event))
-            process.exit()
-          }
+          ParseEventByChunk(event_chunk)
         }
 
         /// clear out the chunk to prepare an empty canvas for the next chunk
         event_chunk = ''
         skip_chunk = !line.startsWith('BEGIN:VEVENT')
-        console.log(`Line ${index}\t${skip_chunk}`)
+        console.log(`\nLine ${index}\t` + (skip_chunk ? 'SKIP' : ''))
       }
 
       if (!skip_chunk) {
-        event_chunk += CleanEscapeCharacters(line) + `
-` // add a new line
+        event_chunk += line + `\n`
       }
     })
   })
@@ -49,3 +42,19 @@ readFile(argv[2], 'utf-8')
     line = line.replaceAll('\\', '') // simply remove any other escape characters aka backslash
     return line
   }
+
+function ParseEventByChunk(event_chunk) {
+  event_chunk = CleanEscapeCharacters(event_chunk)
+  const parsed_event = parser.fromString(event_chunk)['VEVENT']
+  if (parsed_event == null) {
+    return
+  }
+  let keys = Object.keys(parsed_event)
+  console.log(`keys: ${keys}`)
+  console.log(parsed_event)
+
+  parsed_events.push(parsed_event)
+  if (parsed_events.length > 20) { // testing 20 events for now
+    process.exit()
+  }
+}
